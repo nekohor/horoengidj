@@ -57,7 +57,7 @@ class TempoDataFetchView(View):
 
 
 def test_start(request):
-    res = something.delay()
+    res = test_task.delay()
     resp = {}
     resp["data"] = res.id
     return JsonResponse(resp)

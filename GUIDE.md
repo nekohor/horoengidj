@@ -111,7 +111,26 @@ with Path(CURRENT_DIR, 'templates', 'technical_500.html').open() as fh:
  with Path(CURRENT_DIR, 'templates', 'technical_500.html').open(encoding='utf-8') as fh:
 ```
 
-进行编码设置 ，然后再重新启动runserver，出错信息即可正常显示在页面显示。
+进行编码设置 ，然后再重新启动runserver，出错信息即可正常显示在页面显示。新增`encoding="utf-8"`。
+
+```python
+Path(CURRENT_DIR, 'templates', 'technical_500.html').open(encoding="utf-8")
+```
+
+或者对时区进行修改(经测试无效)
+```python
+
+LANGUAGE_CODE = 'zh-hans'
+ 
+TIME_ZONE = 'Asia/Shanghai'
+ 
+USE_I18N = True
+ 
+USE_L10N = True
+ 
+USE_TZ = False
+
+```
 
 ### 测试api接口
 
@@ -299,6 +318,42 @@ re_path(r'^media/(?P<path>.*)$', static_serve, {'document_root': settings.MEDIA_
 ```
 
 
+
+## urls分解
+
+各个app中分别新建urls.py文件。
+
+```python
+from django.urls import path
+from .views import XXX
+
+urlpatterns = [
+    path('index/', XXX.as_view()),
+]
+```
+
+项目的urls设置。注意引入include，这样就能成功分离路由文件，而网页的访问地址不会改变
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('app1.urls')),
+]
+```
+
+
+## 模板的注意事项
+
+在APP中的模板与静态文件的文件夹，其中必须在文件夹内新建一个与APP同名的文件夹放置文件。
+
+模板中使用static命令需要先加载。
+
+```
+{% load static %}
+```
 
 ## 生成requirements.txt
 

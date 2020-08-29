@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import include
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve as static_serve
@@ -24,29 +26,18 @@ from django.urls import re_path
 from django.urls import path
 from rest_framework_simplejwt import views as JWTAuthenticationViews
 
-from temport.views import test_start
-from temport.views import test_end
-from temport.views import TempoDataDemandView
-from temport.views import TempoDataFetchView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    re_path(r'^media/(?P<path>.*)$', static_serve,
+            {'document_root': settings.MEDIA_ROOT}),
 
     path('api/token', JWTAuthenticationViews.TokenObtainPairView.as_view(),
          name='get_token'),
     path('api/token/refresh',
          JWTAuthenticationViews.TokenRefreshView.as_view(), name='refresh_token'),
 
-    path('tempo/demand',
-         TempoDataDemandView.as_view(), name='tempo_data_demand'),
-    path('tempo/fetch',
-         TempoDataFetchView.as_view(), name='tempo_data_fetch'),
-
-    path('test/start',
-         test_start, name='test_start'),
-    path('test/end',
-         test_end, name='test_end'),
-
-    re_path(r'^media/(?P<path>.*)$', static_serve,
-            {'document_root': settings.MEDIA_ROOT}),
+    path('mci/', include('mci.urls')),
+    path('tempo/', include('temport.urls')),
 ]
