@@ -377,3 +377,24 @@ pipreqs . --encoding=utf8 --force
  `--encoding=utf8` 为使用utf8编码，不然可能会报UnicodeDecodeError: 'gbk' codec can't decode byte 0xae in position 406: illegal multibyte sequence 的错误。
 
 `--force` 强制执行，当 生成目录下的requirements.txt存在时覆盖。
+
+## 数据库错误
+
+mysql驱动情况下，出现错误
+
+```python
+AttributeError: 'str' object has no attribute 'decode'
+
+```
+则直接修改`C:\Users\nekohor\Envs\horoengi\lib\site-packages\django\db\backends\mysql\operations.py`，decode换成encode。
+
+```python
+    def last_executed_query(self, cursor, sql, params):
+        # With MySQLdb, cursor objects have an (undocumented) "_executed"
+        # attribute where the exact query sent to the database is saved.
+        # See MySQLdb/cursors.py in the source distribution.
+        query = getattr(cursor, '_executed', None)
+        if query is not None:
+            query = query.encode(errors='replace')
+        return query
+```

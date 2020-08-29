@@ -8,7 +8,6 @@
 @font-face{font-family:electronicFont;src:url(../font/DS-DIGIT.TTF)}
 body{ background:#000d4a url(../images/bg.jpg) center top; background-size:cover;color:#666;font-size: .1rem;}
 li{ list-style-type:none;}
-table{}
 i{ margin:0px; padding:0px; text-indent:0px;}
 img{ border:none; max-width: 100%;}
 a{ text-decoration:none; color:#399bff;}
@@ -49,11 +48,10 @@ a:hover{ color:#06c; text-decoration: none!important}
 .weather img{ width:.37rem; display: inline-block; vertical-align: middle;}
 .weather span{color:rgba(255,255,255,.7); font-size: .18rem; padding-right: .1rem;}
 .mainbox{ padding:.1rem .1rem 0rem .1rem;}
-.mainbox>ul{}
 .mainbox>ul>li{ float: left; padding: 0 .1rem}
 
-.mainbox>ul>li{ width: 30%}
-.mainbox>ul>li:nth-child(2){ width: 40%;padding: 0}
+.mainbox>ul>li{ width: 50%}
+.mainbox>ul>li:nth-child(2){ width: 50%;padding: 0}
 
 .boxall{ border: 1px solid rgba(25,186,139,.17); padding:0 .2rem .4rem .15rem;  background: rgba(255,255,255,.04) url(../images/line.png); background-size: 100% auto; position: relative; margin-bottom: .15rem; z-index: 10;}
 .boxall:before,
@@ -66,7 +64,7 @@ a:hover{ color:#06c; text-decoration: none!important}
 .boxfoot:before,
 .boxfoot:after{ position:absolute; width: .1rem; height: .1rem;  content: "";border-bottom: 2px solid #02a6b5; bottom: 0;}
 
-.bar{background:rgba(101,132,226,.1); padding: .15rem;}
+/*.bar{background:rgba(101,132,226,.1); padding: .15rem;}
 .barbox li,.barbox2 li{ width:50%; text-align: center; position: relative; z-index: 100;}
 .barbox:before,
 .barbox:after{ position:absolute; width: .3rem; height: .1rem; content: ""; }
@@ -77,7 +75,7 @@ a:hover{ color:#06c; text-decoration: none!important}
 
 .barbox{  border: 1px solid rgba(25,186,139,.17); position: relative;}
 .barbox li{ font-size: .7rem; color: #ffeb7b; padding: .05rem 0;  font-family:electronicFont; font-weight: bold;}
-.barbox2 li{ font-size: .19rem; color:rgba(255,255,255,.7); padding-top: .1rem;}
+.barbox2 li{ font-size: .19rem; color:rgba(255,255,255,.7); padding-top: .1rem;}*/
 
 .map{  position:relative; height: 7.2rem; z-index: 9;}
 .map4{ width: 200%; height:7rem;  position: relative; left: -50%; top: 4%; margin-top: .2rem; z-index: 5;}
