@@ -45,7 +45,7 @@ REST_FRAMEWORK = {
 
 ### setup jwt
 
-安装simplejwt
+安装 simplejwt
 
 ```
 pip install djangorestframework_simplejwt
@@ -83,9 +83,7 @@ urlpatterns = [
 ]
 ```
 
-### 设置自己的JWT处理函数
-
-
+### 设置自己的 JWT 处理函数
 
 ### 数据库迁移和新用户设置
 
@@ -111,32 +109,33 @@ with Path(CURRENT_DIR, 'templates', 'technical_500.html').open() as fh:
  with Path(CURRENT_DIR, 'templates', 'technical_500.html').open(encoding='utf-8') as fh:
 ```
 
-进行编码设置 ，然后再重新启动runserver，出错信息即可正常显示在页面显示。新增`encoding="utf-8"`。
+进行编码设置 ，然后再重新启动 runserver，出错信息即可正常显示在页面显示。新增`encoding="utf-8"`。
 
 ```python
 Path(CURRENT_DIR, 'templates', 'technical_500.html').open(encoding="utf-8")
 ```
 
 或者对时区进行修改(经测试无效)
+
 ```python
 
 LANGUAGE_CODE = 'zh-hans'
- 
+
 TIME_ZONE = 'Asia/Shanghai'
- 
+
 USE_I18N = True
- 
+
 USE_L10N = True
- 
+
 USE_TZ = False
 
 ```
 
-### 测试api接口
+### 测试 api 接口
 
-在需要挂代理的机子上，必须在firefox的restclient里测试
+在需要挂代理的机子上，必须在 firefox 的 restclient 里测试
 
-Content-Type必须为application/json
+Content-Type 必须为 application/json
 
 ```
 {
@@ -154,9 +153,7 @@ python manage.py startapp mci
 
 ```
 
-
-
-## 安装和配置Celery
+## 安装和配置 Celery
 
 ### install celery and redis
 
@@ -171,7 +168,7 @@ pip install eventlet
 
 ### setup celery
 
-在项目目录下新建文件celery.py
+在项目目录下新建文件 celery.py
 
 ```python
 import os
@@ -209,7 +206,7 @@ from .celery import app as celery_app
 __all__ = ('celery_app',)
 ```
 
-在settings中添加配置
+在 settings 中添加配置
 
 ```python
 # Celery application definition
@@ -232,11 +229,11 @@ CELERY_BEAT_SCHEDULE = {
 }
 ```
 
-在响应的app中新建tasks.py文件
+在响应的 app 中新建 tasks.py 文件
 
-在view中使用task。
+在 view 中使用 task。
 
-### 启动调试celery
+### 启动调试 celery
 
 ```shell
 celery -A backend worker -l info -P eventlet
@@ -248,19 +245,17 @@ celery -A backend worker -l info -P eventlet
 [ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 11002 connecting to localhost:6379. Lookup timed out.
 ```
 
-则设置redis-conf中的保护模式为关闭（非必须）
+则设置 redis-conf 中的保护模式为关闭（非必须）
 
 ```shell
 protected-mode no
 ```
 
-修改django settings中的CELERY_BROKER_URL和CELERY_RESULT_BACKEND。使其为127.0.0.1而不是默认值localhost。
+修改 django settings 中的 CELERY_BROKER_URL 和 CELERY_RESULT_BACKEND。使其为 127.0.0.1 而不是默认值 localhost。
 
+## oracle 配置
 
-
-## oracle配置
-
-oracle在django中有两种配置方法，如下所示。
+oracle 在 django 中有两种配置方法，如下所示。
 
 ```python
 # service_name
@@ -272,7 +267,7 @@ oracle在django中有两种配置方法，如下所示。
 　　　　　　'PASSWORD': '密码',
 　　　　}
 　　}
- 
+
 # SID
 　　DATABASES = {
 　　　　'default': {
@@ -286,7 +281,7 @@ oracle在django中有两种配置方法，如下所示。
 　　}
 ```
 
-原生查询，如果有多个数据，则使用django.db 的connections进行查询
+原生查询，如果有多个数据，则使用 django.db 的 connections 进行查询
 
 ```python
 from django.db import connections
@@ -296,11 +291,9 @@ with connections['my_db_alias'].cursor() as cursor:
 
 结果发现有层层包装，不如直接使用`cx_Oracle`。
 
+## MEDIA 相关的设置
 
-
-## MEDIA相关的设置
-
-设置settings中media的相关参数。
+设置 settings 中 media 的相关参数。
 
 ```python
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -317,11 +310,9 @@ from django.urls import re_path
 re_path(r'^media/(?P<path>.*)$', static_serve, {'document_root': settings.MEDIA_ROOT}),
 ```
 
+## urls 分解
 
-
-## urls分解
-
-各个app中分别新建urls.py文件。
+各个 app 中分别新建 urls.py 文件。
 
 ```python
 from django.urls import path
@@ -332,7 +323,7 @@ urlpatterns = [
 ]
 ```
 
-项目的urls设置。注意引入include，这样就能成功分离路由文件，而网页的访问地址不会改变
+项目的 urls 设置。注意引入 include，这样就能成功分离路由文件，而网页的访问地址不会改变
 
 ```python
 from django.contrib import admin
@@ -344,18 +335,17 @@ urlpatterns = [
 ]
 ```
 
-
 ## 模板的注意事项
 
-在APP中的模板与静态文件的文件夹，其中必须在文件夹内新建一个与APP同名的文件夹放置文件。
+在 APP 中的模板与静态文件的文件夹，其中必须在文件夹内新建一个与 APP 同名的文件夹放置文件。
 
-模板中使用static命令需要先加载。
+模板中使用 static 命令需要先加载。
 
 ```
 {% load static %}
 ```
 
-## 生成requirements.txt
+## 生成 requirements.txt
 
 单虚拟环境生成
 
@@ -374,19 +364,20 @@ pipreqs . --encoding=utf8 --force
 
 注意：
 
- `--encoding=utf8` 为使用utf8编码，不然可能会报UnicodeDecodeError: 'gbk' codec can't decode byte 0xae in position 406: illegal multibyte sequence 的错误。
+`--encoding=utf8` 为使用 utf8 编码，不然可能会报 UnicodeDecodeError: 'gbk' codec can't decode byte 0xae in position 406: illegal multibyte sequence 的错误。
 
-`--force` 强制执行，当 生成目录下的requirements.txt存在时覆盖。
+`--force` 强制执行，当 生成目录下的 requirements.txt 存在时覆盖。
 
 ## 数据库错误
 
-mysql驱动情况下，出现错误
+mysql 驱动情况下，出现错误
 
 ```python
 AttributeError: 'str' object has no attribute 'decode'
 
 ```
-则直接修改`C:\Users\nekohor\Envs\horoengi\lib\site-packages\django\db\backends\mysql\operations.py`，decode换成encode。
+
+则直接修改`C:\Users\nekohor\Envs\horoengi\lib\site-packages\django\db\backends\mysql\operations.py`，decode 换成 encode。
 
 ```python
     def last_executed_query(self, cursor, sql, params):
@@ -397,4 +388,31 @@ AttributeError: 'str' object has no attribute 'decode'
         if query is not None:
             query = query.encode(errors='replace')
         return query
+```
+
+## pylint 错误
+
+vscode 提示。
+
+```json
+{
+  "resource": "/d:/NutCloudSync/code/horoengidj/backend/mci/charts.py",
+  "owner": "python",
+  "code": "no-member",
+  "severity": 8,
+  "message": "Class 'SomeModel' has no 'objects' member",
+  "source": "pylint",
+  "startLineNumber": 16,
+  "startColumn": 14,
+  "endLineNumber": 16,
+  "endColumn": 14
+}
+```
+
+需要安装以下包并在 vscode 中 pylint args 配置 add item: `--load-plugins=pylint_django`。
+
+```shell
+
+pip install pylint-django
+
 ```
