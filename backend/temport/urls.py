@@ -10,9 +10,9 @@ from .views import TempoDataFetchView
 
 urlpatterns = [
 
-    path('demand',
+    path('export/task',
          TempoDataDemandView.as_view(), name='tempo_data_demand'),
-    path('fetch',
+    path(r'export/task/<slug:id>',
          TempoDataFetchView.as_view(), name='tempo_data_fetch'),
 
     path('test/start',

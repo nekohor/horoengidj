@@ -25,13 +25,17 @@ from django.urls import re_path
 
 from django.urls import path
 from rest_framework_simplejwt import views as JWTAuthenticationViews
-
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     re_path(r'^media/(?P<path>.*)$', static_serve,
             {'document_root': settings.MEDIA_ROOT}),
+
+    # favicon.cio
+    path('favicon.ico', RedirectView.as_view(
+        url=r'static/img/favicon.ico')),
 
     path('api/token', JWTAuthenticationViews.TokenObtainPairView.as_view(),
          name='get_token'),

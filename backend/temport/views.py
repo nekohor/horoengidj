@@ -19,9 +19,9 @@ from .tasks import tempo_data_calculation
 class TempoDataDemandView(View):
 
     def get(self, request):
-        mill_line_tag = request.GET.get("mill_line_tag", "")
-        start_time = request.GET.get("start_time", "")
-        end_time = request.GET.get("end_time", "")
+        mill_line_tag = request.GET.get("line", "").upper()
+        start_time = request.GET.get("start", "")
+        end_time = request.GET.get("end", "")
 
         if (mill_line_tag == "") | (start_time == "") | (end_time == ""):
             resp = {}
@@ -34,25 +34,36 @@ class TempoDataDemandView(View):
             resp = {}
             resp["code"] = 200
             resp["data"] = res.id
-            resp["msg"] = "正在计算中"
+            resp["msg"] = "获取任务ID并开始排队计算"
 
         return JsonResponse(resp)
 
 
 class TempoDataFetchView(View):
-    def get(self, request):
-        task_id = request.GET.get("task_id")
-        res = AsyncResult(task_id)
+    def get(self, request, id):
+        res = AsyncResult(id)
 
         resp = {}
         resp["code"] = 200
         resp["data"] = {}
-        if res.state == "SUCCESS":
-            resp["data"]["state"] = res.state
-            resp["data"]["file_url"] = res.get()
+        resp["msg"] = "查询任务结果"
+
+        content = {}
+        content["state"] = res.state
+        if res.state == "PENDING":
+            content["info"] = "任务在等待，尚未执行"
+        elif res.state == "STARTED":
+            content["info"] = "任务正在运行中"
+        elif res.state == "FAILURE":
+            content["info"] = "任务执行失败"
+        elif res.state == "SUCCESS":
+            content["info"] = "任务执行成功"
+            content["fileUrl"] = res.get()
+            content["fileUrlWithHost"] = request.get_host() + res.get()
         else:
-            resp["data"]["state"] = "RUNNING"
-        resp["msg"] = "获得计算结果"
+            raise Exception("unhandled task state: {}".format(res.state))
+
+        resp["data"] = content
         return JsonResponse(resp)
 
 
