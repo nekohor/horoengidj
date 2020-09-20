@@ -37,11 +37,13 @@ urlpatterns = [
     path('favicon.ico', RedirectView.as_view(
         url=r'static/img/favicon.ico')),
 
+    path('user/', include('sysuser.urls')),
+    path('mci/', include('mci.urls')),
+    path('tempo/', include('tempo.urls')),
+
+    # api token test
     path('api/token', JWTAuthenticationViews.TokenObtainPairView.as_view(),
          name='get_token'),
     path('api/token/refresh',
          JWTAuthenticationViews.TokenRefreshView.as_view(), name='refresh_token'),
-
-    path('mci/', include('mci.urls')),
-    path('tempo/', include('temport.urls')),
 ]

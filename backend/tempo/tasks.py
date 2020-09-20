@@ -2,7 +2,7 @@ import time
 from celery import shared_task
 from django.conf import settings
 
-from .stats.tempo import TempoStats
+from .exporter.tempo_exporter import TempoExporter
 
 
 @shared_task
@@ -18,7 +18,7 @@ def test_task():
 
 @shared_task
 def tempo_data_calculation(mill_line_tag, start_time, end_time):
-    tps = TempoStats(mill_line_tag, start_time, end_time)
+    tps = TempoExporter(mill_line_tag, start_time, end_time)
     df = tps.get_data()
     file_name = "tempo_data_{}_{}_{}.xlsx".format(
         mill_line_tag, start_time, end_time)

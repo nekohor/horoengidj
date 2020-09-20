@@ -253,6 +253,31 @@ protected-mode no
 
 修改 django settings 中的 CELERY_BROKER_URL 和 CELERY_RESULT_BACKEND。使其为 127.0.0.1 而不是默认值 localhost。
 
+
+
+### celery在windows下的错误
+
+`celery`在4.x版本不再支持 windows 环境，在 windows 环境下运行，会出现`ValueError: not enough values to unpack (expected 3, got 0)`的报错，可行的解决方案有两种： 
+
+1. 设置环境变量`FORKED_BY_MULTIPROCESSING=1`，完美解决问题（推荐）。吐槽一句，网上搜索到的 90% 的解决办法都是建议用`eventlet`甚至`solo`，实际上这个`celery`核心成员在 [issues#4081](https://github.com/celery/celery/issues/4081#issuecomment-349535810) 中提到的方法才是最优解。
+2. 使用`eventlet`作为并发模型，需要注意由于`eventlet`和`gevent`使用了猴子补丁，所以使用过程中可能出现一些难以解决的奇怪问题，特别是不一定支持某些第三方模块的使用。官方文档强调不要用配置文件的方式指定`eventlet`和`gevent`，而是用启动命令`-P`，以免太迟应用猴子补丁而导致一系列奇怪问题。
+
+### 时区问题
+
+`celery`默认时区为`UTC`，比国内晚8个小时，需要配置时区：
+
+```
+enable_utc = True  # 默认为 Truetimezone = 'Asia/Shanghai'
+```
+
+
+
+如果不修改时区的话，会影响定时任务和`Flower`内的时间显示。
+
+### Worker BrokenPipeError 问题
+
+在使用`celery==4.3.0 kombu==4.6.3 amqp==2.5.0 redis==3.2.1`时，出现 worker 退出的情况，日志显示抛出`BrokenPipeError`的异常，根据 [issues#3773](https://github.com/celery/celery/issues/3773) ，应该是个尚未解决的 bug。建议用系统服务或守护进程的方式启动 worker 进程，保证进程抛出异常退出后能够重新启动。
+
 ## oracle 配置
 
 oracle 在 django 中有两种配置方法，如下所示。

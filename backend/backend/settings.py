@@ -26,7 +26,7 @@ SECRET_KEY = '$y5hm_p-==a1*6)*@oo8h*=rka7yp#%*)$u#0t=v06+924v!1z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.88.156', '192.168.88.158']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
 
+    'sysuser',
     'mci',
-    'temport',
+    'tempo',
 
 ]
 
@@ -155,9 +156,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    # ]
 }
 
 

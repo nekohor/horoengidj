@@ -2,9 +2,10 @@ import pandas as pd
 import numpy as np
 import cx_Oracle
 from dateutil.parser import parse
+from django.db import connections
 
 
-class TempoStats():
+class TempoExporter:
 
     def __init__(self, mill_line_tag, start_time, end_time):
         self.mill_line_tag = mill_line_tag
@@ -41,7 +42,10 @@ class TempoStats():
         return sql
 
     def get_tempo_data_from_db(self):
+        # if __name__ == "__main__":
         conn = cx_Oracle.connect("qms", "system", "172.27.36.1/qmsdb")
+        # else:
+        # conn = connections["qms"].connection
         sql = self.get_sql()
         df = pd.read_sql_query(sql, conn)
         conn.close()
@@ -74,7 +78,7 @@ class TempoStats():
             "f{}_ext_rhythm".format(std): {
                 "start_col": self.last_done_col.format(std),
                 "end_col": self.cur_done_col.format(std),
-                "col_name":  "F{}抛钢节奏".format(std),
+                "col_name": "F{}抛钢节奏".format(std),
             }
         }
         return tempo_cols_dict
@@ -119,11 +123,11 @@ class TempoStats():
 
         for r1_bit_col in self.r1_bite_cols:
             df["{}_count".format(r1_bit_col)] = df[r1_bit_col].notnull().apply(
-                lambda x: 1 if x == True else 0)
+                lambda x: 1 if x is True else 0)
 
         for r2_bit_col in self.r2_bite_cols:
             df["{}_count".format(r2_bit_col)] = df[r2_bit_col].notnull().apply(
-                lambda x: 1 if x == True else 0)
+                lambda x: 1 if x is True else 0)
 
         r1_count_cols = ["{}_count".format(x) for x in self.r1_bite_cols]
         r2_count_cols = ["{}_count".format(x) for x in self.r2_bite_cols]
@@ -140,6 +144,8 @@ class TempoStats():
 
         df["last_pass_r1_bite"] = np.nan
         df["last_pass_r2_bite"] = np.nan
+
+        df.index = list(range(df.shape[0]))
         for i in range(df.shape[0]):
             r1_total_pass = df.loc[i, "r1_total_pass"]
             r2_total_pass = df.loc[i, "r2_total_pass"]
@@ -160,6 +166,10 @@ class TempoStats():
     def get_result_data(self, df):
         result = pd.DataFrame()
         result["热卷号"] = df["COIL_ID"]
+        result["钢种"] = df["STEEL_GRADE"]
+        result["目标厚度"] = df["AIM_THICK"]
+        result["目标宽度"] = df["AIM_WIDTH"]
+        result["信号采集完成时间"] = df["PRODUCT_TIME"]
 
         # 精轧赋值给结果
         for std in self.stds:
@@ -195,12 +205,24 @@ class TempoStats():
         df = self.get_tempo_data_from_db()
         df = self.wash_fm_data(df)
         df = self.wash_rm_data(df)
+        df.to_excel("df.xlsx")
         res = self.get_result_data(df)
         return res
 
 
 if __name__ == "__main__":
-    tps = TempoStats("HSM1", "2020-08-31 16:00:00", "2020-09-01 00:00:00")
-    res = tps.get_data()
-    print(res)
-    res.to_excel("test.xlsx", index=False)
+
+    start_time = "20200907000000"
+    end_time = "20200908100000"
+    lines = ["HSM1", "HSM2"]
+
+    for line in lines:
+        tps = TempoExporter(line, start_time, end_time)
+        res = tps.get_data()
+        print(res)
+        res.to_excel(
+            "tempo_data_{}_{}_{}.xlsx".format(
+                line,
+                start_time,
+                end_time,
+            ), index=False)
