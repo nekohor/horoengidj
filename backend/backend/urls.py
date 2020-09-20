@@ -21,6 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve as static_serve
 from django.urls import re_path
+from django.views.generic.base import TemplateView
 
 
 from django.urls import path
@@ -46,4 +47,6 @@ urlpatterns = [
          name='get_token'),
     path('api/token/refresh',
          JWTAuthenticationViews.TokenRefreshView.as_view(), name='refresh_token'),
+
+    path('', TemplateView.as_view(template_name="index.html")),
 ]
